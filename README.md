@@ -9,7 +9,7 @@
  4. Easy to use: as it's observable, without need to tackle complex tables and helper classes, just input what you have and get what you want 
 
 # GetDefaultDimensionFromAttrs
-Gets some dimension attributes and their values and returns the corresponding DefaultDimension.
+Recieves desired number of dimension attributes and their values and returns the corresponding DefaultDimension.
 ```csharp
 static void TEST_GetDefaultDimensionFromAttrs(Args _args)
 {
@@ -30,7 +30,7 @@ static void TEST_GetDefaultDimensionFromAttrs(Args _args)
 result will be like `5637146826`
 
 # GetAllDimensionAttributeTitles
-Retuns all the dimesnion attibutes that are defined in the system.
+Returns all the dimesnion attibutes that are defined in the system.
 ```csharp
 static void TEST_GetAllDimensionAttributeTitles(Args _args)
 {
@@ -55,7 +55,7 @@ result1 will be like `{"BankAccount", "BusinessUnit", "CardNo", "CostCenter", "C
 result2 will be like `{"BankAccount", "CardNo", "Customer", "ExpenseType", "FixedAsset", "MainAccount", "Vendor", "Worker"}`
 
 # GetLedgerDimensionFromOffsetAcc
-Recieves a desired offset account and return the corresponding LedgerDimension.
+Recieves a desired offset account and returns the corresponding LedgerDimension.
 ```csharp
 static void TEST_GetLedgerDimensionFromOffsetAccs(Args _args)
 {
