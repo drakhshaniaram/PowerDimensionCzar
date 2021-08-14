@@ -1,3 +1,9 @@
+/// <summary>
+/// Created and maintained By Jalal Derakhshani
+/// drakhshani.aram@hotmail.com
+/// 2021
+/// </summary>
+
 class PowerDimensionCzar
 {
 }
