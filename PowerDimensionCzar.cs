@@ -8,7 +8,7 @@ class PowerDimensionCzar
 {
 }
 
-public static str GenerateExcludingString(Set _values = null)
+private str GenerateExcludingString(Set _values = null)
 {
     str             result;
     container       baseCon;
@@ -43,13 +43,13 @@ public static DimensionDefault GetDefaultDimensionFromAttrs(container _dimAttrs,
     QueryRun                         qr;
     QueryBuildDataSource             qbds, qbdsExclude;
     DefaultDimensionView             result;
-
+    PowerDimensionCzar               dimCzar = new PowerDimensionCzar();
     Set                              attrs = new Set(Types::String);
     int                              attrPairsCount = conLen(_dimAttrs) / 2;
     int                              attrIdx;
+    ;
 
     q = new Query();
-
 
     for(currPair = 1; currPair <= attrPairsCount; currPair++)
     {
@@ -80,7 +80,7 @@ public static DimensionDefault GetDefaultDimensionFromAttrs(container _dimAttrs,
     qbdsExclude.joinMode(JoinMode::NoExistsJoin);
     qbdsExclude.relations(false);
     qbdsExclude.addLink(fieldNum(DefaultDimensionView, DefaultDimension), fieldNum(DefaultDimensionView, DefaultDimension));
-    qbdsExclude.addRange(fieldNum(DefaultDimensionView, Name)).value(PowerDimensionCzar::GenerateExcludingString(attrs));
+    qbdsExclude.addRange(fieldNum(DefaultDimensionView, Name)).value(dimCzar.GenerateExcludingString(attrs));
 
     qr = new QueryRun(q);
     while(qr.next())
@@ -90,6 +90,43 @@ public static DimensionDefault GetDefaultDimensionFromAttrs(container _dimAttrs,
                 return result.DefaultDimension;
     }
     return 0;
+}
+public static DimensionDefault findDefaultDimension(container _dimAttrs, boolean _excludeOtherAttrs = true)
+{
+    return PowerDimensionCzar::GetDefaultDimensionFromAttrs(_dimAttrs, _excludeOtherAttrs);
+}
+public static DimensionDefault findOrCreateDefaultDimension(container _dimAttrs, boolean _excludeOtherAttrs = true)
+{
+    DimensionAttributeValueSetStorage   valueSetStorage = new DimensionAttributeValueSetStorage();
+    DimensionDefault                    result;
+    DimensionAttributeValue             dimensionAttributeValue;
+    DimensionDefault                    existsAlready = PowerDimensionCzar::findDefaultDimension(_dimAttrs);
+    int                                 currPair;
+    Set                                 attrs = new Set(Types::String);
+    int                                 attrPairsCount = conLen(_dimAttrs) / 2;
+    int                                 attrIdx;
+    ;
+
+    if (existsAlready)
+    {
+        return existsAlready;
+    }
+    for (currPair = 1; currPair <= attrPairsCount; currPair++)
+    {
+        if (currPair == 1)
+        {
+            attrIdx = 1;
+        }
+
+        dimensionAttributeValue = dimensionAttributeValue::findByDimensionAttributeAndValue(conPeek(_dimAttrs, attrIdx), conPeek(_dimAttrs, attrIdx+1), false, true);
+        valueSetStorage.addItem(dimensionAttributeValue);
+
+        attrs.add(conPeek(_dimAttrs, attrIdx));
+        attrIdx += 2;
+    }
+
+    result = valueSetStorage.save();
+    return result;
 }
 
 public static DimensionDefault GetLedgerDimensionFromOffsetAcc(int _offsetAccount)
